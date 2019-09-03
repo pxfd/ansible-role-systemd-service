@@ -1,0 +1,25 @@
+#jinja2:lstrip_blocks: True
+# {{ ansible_managed }}
+
+{% if service is defined %}
+{% for stanza, config in service.items() %}
+[{{ stanza }}]
+
+{% for key, value in config.items() %}
+
+{# Some input can be in form of an array we just want to repeat outer key with given list items. #}
+{% if value is sequence and value is not string %}
+{% for item in value %}
+{{ key }}={{ item }}
+{% endfor %}
+
+{% else %}
+
+{{ key }}={{ value }}
+
+{% endif %}
+
+{% endfor %}
+
+{% endfor %}
+{% endif %}

@@ -1,0 +1,39 @@
+---
+
+- name: Verify provided configuration
+  assert:
+    that:
+      - systemd_service is defined
+      - systemd_service is sequence
+
+- name: Verify provided services configuration
+  assert:
+    that:
+      - item.service_name is defined
+      - item.service_config is mapping
+  with_items:
+    - "{{ systemd_service }}"
+
+- name: Create systemd service definitions
+  template:
+    src: systemd.service.j2
+    dest: "{{ systemd_service_path }}/{{ item.service_name }}"
+    owner: "{{ systemd_service_owner }}"
+    group: "{{ systemd_service_group }}"
+    mode: "{{ systemd_service_mode }}"
+  vars:
+    service: "{{ item.service_config }}"
+  with_items:
+    - "{{ systemd_service }}"
+  notify:
+    - reload systemd
+
+- meta: flush_handlers
+
+- name: Setup systemd services
+  service:
+    name: "{{ item.service_name }}"
+    enabled: "{{ item.service_enabled | default(false) }}"
+    state: "{{ item.service_status | default('stopped') }}"
+  with_items:
+    - "{{ systemd_service }}"

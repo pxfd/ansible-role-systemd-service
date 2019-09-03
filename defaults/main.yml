@@ -1,0 +1,34 @@
+---
+systemd_service: []
+#   - service_name: freezer-api.service
+#     service_enabled: yes
+#     service_config:
+#         Unit:
+#             Description: freezer api
+#             Before:
+#             After: network.target
+#         Service:
+#             Type: simple
+#             User: '{{ freezer_user }}'
+#             WorkingDirectory: '{{ freezer_home }}'
+#             ExecStart: cmd
+#             Restart: always
+#             Environment:
+#               - OS_PROJECT_DOMAIN_NAME=default
+#               - OS_USER_DOMAIN_NAME=default
+#               - OS_PROJECT_NAME=service
+#               - OS_TENANT_NAME=service
+#               - OS_DOMAIN_NAME=default
+#               - OS_USERNAME=admin
+#               - OS_PASSWORD="{{ openstack_identity_admin_password }}"
+#               - OS_AUTH_URL="http://{{ openstack_identity_endpoint_host }}:{{ openstack_identity_ha_admin_port }}/v3"
+#               - OS_IMAGE_API_VERSION=2
+#               - OS_IDENTITY_API_VERSION=3
+#         Install:
+#             WantedBy: multi-user.target
+
+systemd_service_path: /etc/systemd/system
+
+systemd_service_owner: root
+systemd_service_group: root
+systemd_service_mode: 0644
