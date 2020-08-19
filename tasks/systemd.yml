@@ -25,15 +25,21 @@
     service: "{{ item.service_config }}"
   with_items:
     - "{{ systemd_service }}"
-  notify:
-    - reload systemd
-
-- meta: flush_handlers
+  register: create_systemd_service_definition
 
 - name: Setup systemd services
-  service:
+  systemd:
     name: "{{ item.service_name }}"
     enabled: "{{ item.service_enabled | default(false) }}"
     state: "{{ item.service_status | default('stopped') }}"
+    daemon_reload: yes
   with_items:
     - "{{ systemd_service }}"
+
+- name: Restart systemd services
+  systemd:
+    name: "{{ item.service_name }}"
+    state: restarted
+  with_items:
+    - "{{ systemd_service }}"
+  when: create_systemd_service_definition.changed
