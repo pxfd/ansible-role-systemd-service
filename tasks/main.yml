@@ -1,4 +1,4 @@
 ---
 
-- include: systemd.yml
+- include_tasks: systemd.yml
   when: ansible_service_mgr == 'systemd'
